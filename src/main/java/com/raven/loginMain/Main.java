@@ -7,6 +7,7 @@ import com.raven.component.PanelLoading;
 import com.raven.component.PanelLoginAndRegister;
 import com.raven.component.PanelVerifyCode;
 import com.raven.loginModel.ModelUser;
+import com.raven.loginService.ServiceUser;
 import java.awt.Frame;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -36,7 +37,7 @@ public class Main extends javax.swing.JFrame {
     
     private final DecimalFormat df = new DecimalFormat("##0.###", symbols);
     private PanelLoginAndRegister loginAndRegister;
-    
+    private ServiceUser service;
     
     
     public Main() {
@@ -120,7 +121,27 @@ public class Main extends javax.swing.JFrame {
             }
         });
     }
+    
+     private void register(){
+        ModelUser user = loginAndRegister.getUser();
+        try{
+            if(service.checkDuplicateUser(user.getUserName())){
+                showMessage(Message.MessageType.ERROR, "Este nombre de usuario ya existe");
+            }else if(service.checkDuolicateEmail(user.getEmail())){
+                showMessage(Message.MessageType.ERROR, "Este correo electrónico ya existe");
+            }else{
+                service.insertUser(user);
+                sendMain();
+            }
+        }catch(Exception e){
+            showMessage(Message.MessageType.ERROR,"Error en el registro");
+        }
+    }
+    private void sendMain(){
         
+    }
+       
+    /* --------------------------Register hecho por Ángel--------------------------------
     private void register() {
     ModelUser user = loginAndRegister.getUser();
     if (user == null) {
@@ -191,7 +212,7 @@ public class Main extends javax.swing.JFrame {
             e.printStackTrace();
         }
     }).start();
-}
+}*/
     
     private void showMessage(Message.MessageType messageType, String message){
         Message ms = new Message();

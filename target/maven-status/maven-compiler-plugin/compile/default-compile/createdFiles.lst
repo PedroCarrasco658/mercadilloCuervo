@@ -7,8 +7,10 @@ com\raven\loginMain\Main.class
 com\raven\loginMain\Main$1.class
 com\raven\loginSwing\MyPasswordField$1.class
 com\raven\component\PanelLoading$1.class
+com\raven\loginService\ServiceMail.class
 com\raven\component\PanelVerifyCode$2.class
 com\raven\database\ConexionDB.class
+com\raven\loginService\ServiceMail$1.class
 com\raven\loginMain\Main$3.class
 com\raven\loginModel\ModelUser.class
 com\raven\loginSwing\Button.class
@@ -24,8 +26,10 @@ com\raven\component\PanelLoginAndRegister.class
 com\raven\loginMain\Main$2.class
 com\raven\component\PanelVerifyCode$3.class
 com\raven\component\PanelLoginAndRegister$1.class
+com\raven\loginService\ServiceUser.class
 com\raven\component\PanelCover$1.class
 com\raven\loginSwing\ButtonOutLine$1.class
 com\raven\loginSwing\MyPasswordField.class
+com\raven\loginModel\ModelMessage.class
 com\raven\loginSwing\MyTextField.class
 com\raven\component\PanelLoading.class

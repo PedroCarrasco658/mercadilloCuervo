@@ -1,16 +1,11 @@
-/*
- * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
- */
 
 package com.mycompany.mercadillo;
 
+import com.raven.connection.DatabaseConnection;
 import com.raven.loginMain.Main;
+import java.sql.SQLException;
 import javax.swing.JFrame;
 
-/**
- *
- * @author 1dam
- */
 public class Mercadillo extends JFrame{
 
     public static void main(String[] args) {
@@ -18,6 +13,12 @@ public class Mercadillo extends JFrame{
         mercadillo.setVisible(true);
         mercadillo.setLocationRelativeTo(null);
         mercadillo.repaint();
+        try {
+            DatabaseConnection.getInstance().connectToDatabase();
+        }catch(SQLException e){
+            e.printStackTrace();
+        }
+        
     }
 
     

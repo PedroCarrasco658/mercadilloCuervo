@@ -1,13 +1,11 @@
-
 package com.raven.loginModel;
-
 
 public class ModelUser {
     int userID;
     String userName;
     String email;
     String password;
-    String verifyCode; 
+    String verifyCode;
 
     public int getUserID() {
         return userID;
@@ -48,18 +46,27 @@ public class ModelUser {
     public void setVerifyCode(String verifyCode) {
         this.verifyCode = verifyCode;
     }
-        public ModelUser(int userID, String userName, String email, String password, String verifyCode) {
+
+    public ModelUser(int userID, String userName, String email, String password, String verifyCode, String dni) {
         this.userID = userID;
         this.userName = userName;
         this.email = email;
         this.password = password;
         this.verifyCode = verifyCode;
     }
-        public ModelUser(int userID, String userName, String email, String password) {
+
+    public ModelUser(int userID, String userName, String email, String password) {
         this.userID = userID;
         this.userName = userName;
         this.email = email;
         this.password = password;
     }
-    
+
+    // Añadir constructor con dni
+    public ModelUser(int userID, String userName, String email, String password, String dni) {
+        this.userID = userID;
+        this.userName = userName;
+        this.email = email;
+        this.password = password;
+    }
 }

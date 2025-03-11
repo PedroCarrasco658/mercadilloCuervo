@@ -3,6 +3,7 @@ package com.raven.loginMain;
 
 import com.raven.component.Message;
 import com.raven.component.PanelCover;
+import com.raven.component.PanelInicio;
 import com.raven.component.PanelLoading;
 import com.raven.component.PanelLoginAndRegister;
 import com.raven.component.PanelVerifyCode;
@@ -23,7 +24,7 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
 import com.raven.database.ConexionDB;
-public class Main extends javax.swing.JFrame {
+public class MainLogin extends javax.swing.JFrame {
 
     private MigLayout layout;
     private PanelCover cover;
@@ -38,12 +39,15 @@ public class Main extends javax.swing.JFrame {
     private final DecimalFormat df = new DecimalFormat("##0.###", symbols);
     private PanelLoginAndRegister loginAndRegister;
     private ServiceUser service;
+    private PanelInicio panelInicio;
     
     
-    public Main() {
+    public MainLogin() {
         initComponents();
         init();
+        
     }
+    
     
     public void init(){
         layout = new MigLayout("fill, insets 0");

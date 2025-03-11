@@ -121,17 +121,20 @@ public class Main extends javax.swing.JFrame {
         });
     }
         
-    private void register() {
+private void register() {
     ModelUser user = loginAndRegister.getUser();
     if (user == null) {
         showMessage(Message.MessageType.ERROR, "No se obtuvo información del usuario.");
         return;
     }
 
-    // Obtener y limpiar los campos
+    // Obtener y limpiar los campos con depuración
     String nombre = user.getUserName() != null ? user.getUserName().trim() : "";
     String email = user.getEmail() != null ? user.getEmail().trim() : "";
     String password = user.getPassword() != null ? user.getPassword().trim() : "";
+
+    // Depuración: Mostrar valores recibidos
+    System.out.println("Valores recibidos - Nombre: '" + nombre + "', Email: '" + email + "', Contraseña: '" + password + "'");
 
     // Validaciones
     if (nombre.isEmpty()) {
@@ -144,8 +147,7 @@ public class Main extends javax.swing.JFrame {
         return;
     }
 
-    // Validar formato del email solo si no está vacío
-    if (!email.isEmpty() && !email.matches("^[A-Za-z0-9+_.-]+@(.+)$")) {
+    if (!email.matches("^[A-Za-z0-9+_.-]+@(.+)$")) {
         showMessage(Message.MessageType.ERROR, "El email no tiene un formato válido.");
         return;
     }
@@ -165,13 +167,18 @@ public class Main extends javax.swing.JFrame {
 
     // Operación en un hilo separado para no bloquear la UI
     new Thread(() -> {
-        String sql = "INSERT INTO Cliente (nombre, email, contrasena, dni) VALUES (?, ?, ?, ?)"; // Corrección de typo
+        String sql = "INSERT INTO cliente (nombre, email, contrasena, dni) VALUES (?, ?, ?, ?)";
         try (Connection conn = ConexionDB.getConnection();
              PreparedStatement pstmt = conn.prepareStatement(sql)) {
-            // Mapear campos a Cliente, asegurando todos los parámetros
+            // Depuración: Mostrar la base de datos y consulta
+            String dbName = conn.getCatalog();
+            System.out.println("Conectado a la base de datos: " + dbName);
+            System.out.println("Consulta SQL: " + sql);
+
+            // Mapear campos a Cliente
             pstmt.setString(1, nombre);
             pstmt.setString(2, email);
-            pstmt.setString(3, password); // Siempre se establece, validado previamente
+            pstmt.setString(3, password);
             pstmt.setNull(4, java.sql.Types.VARCHAR); // dni opcional, siempre NULL
 
             int rowsAffected = pstmt.executeUpdate();

@@ -20,16 +20,16 @@ public class DatabaseConnection {
         
     }
     
-    /*public void connectToDatabase() throws SQLException{
+    /*
+    public void connectToDatabase() throws SQLException{
       String server = "db.fxqnjyvpvcxthoboxozu.supabase.co"; 
       String port = "5432"; 
       String database = "postgres"; // Nombre de la base de datos
       String userName = "postgres"; // Usuario por defecto en Supabase
       String password = "eta%2A2x7qF6Z%26RGP"; 
         connection = java.sql.DriverManager.getConnection("jdbc:postgresql://" + server + ":" + port + "/" + database, userName, password);
-
-        
-    }*/
+    }
+    */
     public void connectToDatabase() throws SQLException {
     String url = "jdbc:postgresql://aws-0-eu-west-3.pooler.supabase.com:6543/postgres";
     String userName = "postgres.fxqnjyvpvcxthoboxozu";

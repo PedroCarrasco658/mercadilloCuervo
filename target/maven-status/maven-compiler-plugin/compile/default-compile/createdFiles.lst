@@ -6,12 +6,14 @@ com\raven\loginMain\Main$5.class
 com\raven\loginMain\Main.class
 com\raven\loginMain\Main$1.class
 com\raven\loginSwing\MyPasswordField$1.class
+com\mycompany\mercadillo\CargaDatos.class
 com\raven\component\PanelLoading$1.class
 com\raven\component\PanelVerifyCode$2.class
 com\raven\database\ConexionDB.class
 com\raven\loginMain\Main$3.class
 com\raven\loginModel\ModelUser.class
 com\raven\loginSwing\Button.class
+com\mycompany\mercadillo\CargaDatos$1.class
 com\raven\loginSwing\Button$1.class
 com\raven\loginSwing\PanelRound.class
 com\raven\component\PanelVerifyCode.class

@@ -16,17 +16,12 @@ public class Mercadillo extends JFrame{
         
         
         MainLogin login = new MainLogin();
-        MainApp mercadillo = new MainApp();
-        /*login.setVisible(false);
+       // MainApp mercadillo = new MainApp();
+       // mercadillo.setVisible(true);
+        login.setVisible(true);
         login.setLocationRelativeTo(null);
         login.repaint();
-        try {
-            DatabaseConnection.getInstance().connectToDatabase();
-        }catch(SQLException e){
-            e.printStackTrace();
-        }*/
-        mercadillo.setVisible(true);
-        
+      //  mercadillo.setVisible(true); 
     }
 
     

@@ -16,15 +16,17 @@ import java.util.Properties;
 public class ServiceMail {
     public ModelMessage sendMain(String toEmail, String code) {
     ModelMessage ms = new ModelMessage(false, "");
-    String from = "pedrocarrasco111105@gmail.com";
+    String from = "verifycodeappcuervo@gmail.com";
     Properties prop = new Properties();
     prop.put("mail.smtp.host", "smtp.gmail.com");
-    prop.put("mail.smtp.port", "587");
+    prop.put("mail.smtp.port", "465");
     prop.put("mail.smtp.auth", "true");
-    prop.put("mail.smtp.starttls.enable", "true");
-    prop.put("mail.smtp.ssl.trust", "smtp.gmail.com");
-    String username = "pedrocarrasco111105@gmail.com";
-    String password = "aqvz dqwq ktnh lhot"; // Pon aquí tu contraseña real o usa variables de entorno
+    prop.put("mail.smtp.starttls.enable", "false");
+    prop.put("mail.smtp.socketFactory.class", "javax.net.ssl.SSLSocketFactory");
+    prop.put("mail.smtp.ssl.trust","smtp.gmail.com");
+    prop.put("mail.debug", "true");
+    String username = "verifycodeappcuervo@gmail.com";
+    String password = "xfjg aimw ilpn sfkh"; 
     
     Session session = Session.getInstance(prop, new Authenticator() {
         @Override
@@ -42,11 +44,9 @@ public class ServiceMail {
         Transport.send(message);
         ms.setSuccess(true);
     } catch (MessagingException e) {
-        if (e.getMessage().equals("Invalid Addresses")) {
-            ms.setMessage("Invalid email");
-        } else {
-            ms.setMessage("Error");
-        }
+        e.printStackTrace();
+        ms.setMessage("Error al enviar el correo: " + e.getMessage());
+        System.out.println(e.getMessage());
     }
     return ms;
 }

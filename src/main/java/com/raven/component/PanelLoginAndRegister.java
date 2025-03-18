@@ -4,6 +4,7 @@
  */
 package com.raven.component;
 
+import com.raven.loginModel.ModelLogin;
 import com.raven.loginModel.ModelUser;
 import com.raven.loginSwing.Button;
 import com.raven.loginSwing.MyPasswordField;
@@ -34,10 +35,17 @@ public class PanelLoginAndRegister extends javax.swing.JLayeredPane {
     }
     
     private ModelUser user;
-    public PanelLoginAndRegister(ActionListener eventRegister) {
+    private ModelLogin dataLogin;
+
+    public ModelLogin getDataLogin() {
+        return dataLogin;
+    }
+    
+    
+    public PanelLoginAndRegister(ActionListener eventRegister,ActionListener eventLogin) {
         initComponents();
         initRegister(eventRegister);
-        initLogin();
+        initLogin(eventLogin);
         login.setVisible(false);
         register.setVisible(true);
     }
@@ -89,7 +97,7 @@ public class PanelLoginAndRegister extends javax.swing.JLayeredPane {
         });
         
     }
-    private void initLogin(){
+    private void initLogin(ActionListener eventLogin){
         login.setLayout(new MigLayout("wrap", "push[center]push", "push[]50[]10[]35[]14[]push"));
         JLabel label = new JLabel("Iniciar Sesión");
         label.setFont(new Font("sansserif", 1, 30));
@@ -126,8 +134,17 @@ public class PanelLoginAndRegister extends javax.swing.JLayeredPane {
         Button cmd = new Button();
         cmd.setBackground(new Color(32, 255, 184));
         cmd.setForeground(250,250,250);
+        cmd.addActionListener(eventLogin);
         cmd.setText("Inicia Sesión");
         login.add(cmd, "w 40%, h 40");
+        cmd.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {            
+                String email = txtEmail.getText().trim();
+                String password = String.valueOf(txtPass.getPassword());
+                dataLogin = new ModelLogin(email, password);
+            }
+        });
     }
     
     public void showRegister(boolean show){

@@ -2,7 +2,7 @@ package com.raven.loginModel;
 
 public class ModelUser {
     int userID;
-    String userName;
+    String username;
     String email;
     String password;
     String verifyCode;
@@ -11,8 +11,8 @@ public class ModelUser {
         return userID;
     }
 
-    public String getUserName() {
-        return userName;
+    public String getUsername() {
+        return username;
     }
 
     public String getEmail() {
@@ -31,8 +31,8 @@ public class ModelUser {
         this.userID = userID;
     }
 
-    public void setUserName(String userName) {
-        this.userName = userName;
+    public void setUserName(String username) {
+        this.username = username;
     }
 
     public void setEmail(String email) {
@@ -47,25 +47,25 @@ public class ModelUser {
         this.verifyCode = verifyCode;
     }
 
-    public ModelUser(int userID, String userName, String email, String password, String verifyCode, String dni) {
+    public ModelUser(int userID, String username, String email, String password, String verifyCode, String dni) {
         this.userID = userID;
-        this.userName = userName;
+        this.username = username;
         this.email = email;
         this.password = password;
         this.verifyCode = verifyCode;
     }
 
-    public ModelUser(int userID, String userName, String email, String password) {
+    public ModelUser(int userID, String username, String email, String password) {
         this.userID = userID;
-        this.userName = userName;
+        this.username = username;
         this.email = email;
         this.password = password;
     }
 
     // Añadir constructor con dni
-    public ModelUser(int userID, String userName, String email, String password, String dni) {
+    public ModelUser(int userID, String username, String email, String password, String dni) {
         this.userID = userID;
-        this.userName = userName;
+        this.username = username;
         this.email = email;
         this.password = password;
     }

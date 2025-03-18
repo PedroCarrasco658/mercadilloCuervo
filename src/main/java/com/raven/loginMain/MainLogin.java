@@ -24,6 +24,11 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
 import com.raven.database.ConexionDB;
+import com.raven.loginModel.InsertarFila;
+import com.raven.loginModel.ModelLogin;
+import com.raven.loginModel.ModelMessage;
+import com.raven.loginService.ServiceMail;
+import java.sql.DriverManager;
 public class MainLogin extends javax.swing.JFrame {
 
     private MigLayout layout;
@@ -48,8 +53,24 @@ public class MainLogin extends javax.swing.JFrame {
         
     }
     
-    
+    public void ejecutarInsercion() {
+        //ModelUser user = loginAndRegister.getUser();
+        try {
+            // Crear la conexión a la base de datos
+            Connection con = DriverManager.getConnection("jdbc:mysql://localhost:3306/loginmercadillo", "root", "");
+            //ServiceUser sr = new ServiceUser();
+            //sr.insertUser(user);
+            // Crear la instancia de InsertarFila
+            InsertarFila inserter = new InsertarFila(con);
+            
+            // Llamar al método para insertar la fila
+            inserter.insertarFila();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+    }
     public void init(){
+        service = new ServiceUser();
         layout = new MigLayout("fill, insets 0");
         cover = new PanelCover();
         loading = new PanelLoading();
@@ -58,9 +79,16 @@ public class MainLogin extends javax.swing.JFrame {
             @Override
             public void actionPerformed(ActionEvent ae){
                 register();
+                //ejecutarInsercion();
             } 
         };
-        loginAndRegister = new PanelLoginAndRegister(eventRegister);
+        ActionListener eventLogin = new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                login();
+            }
+        };
+        loginAndRegister = new PanelLoginAndRegister(eventRegister, eventLogin);
         TimingTarget target = new TimingTargetAdapter(){
             @Override
             public void timingEvent(float fraction){
@@ -85,9 +113,9 @@ public class MainLogin extends javax.swing.JFrame {
                     fractionCover = fraction;
                     fractionLogin = 1f - fraction;
                     if(fraction <= 0.5f){
-                     //   cover.registerLeft(fraction * 100);
+                      //  cover.registerLeft(fraction * 100);
                     }else{
-                      //  cover.loginLeft((1f - fraction) * 100);
+                      // cover.loginLeft((1f - fraction) * 100);
                     }
                 }
                 if(fraction >= 0.5f){
@@ -124,25 +152,72 @@ public class MainLogin extends javax.swing.JFrame {
                 }
             }
         });
+        verifyCode.addEventButtonOk(new ActionListener(){
+            @Override
+            public void actionPerformed(ActionEvent ae){
+                try {
+                    ModelUser user = loginAndRegister.getUser();
+                    if(service.verifyCodeWithUser(user.getUserID(),verifyCode.getInputCode())){
+                       service.doneVerify(user.getUserID());
+                        showMessage(Message.MessageType.SUCCESS, "Registro correcto");
+                        verifyCode.setVisible(false);
+                    }else{
+                        showMessage(Message.MessageType.ERROR,"Código de verificación Incorrecto");
+                    }
+                } catch (SQLException e) {
+                    showMessage(Message.MessageType.ERROR, "Error");
+                }
+            }
+        });
     }
     
      private void register(){
         ModelUser user = loginAndRegister.getUser();
         try{
-            if(service.checkDuplicateUser(user.getUserName())){
+            if(service.checkDuplicateUser(user.getUsername())){
                 showMessage(Message.MessageType.ERROR, "Este nombre de usuario ya existe");
-            }else if(service.checkDuolicateEmail(user.getEmail())){
+            }else if(service.checkDuplicateEmail(user.getEmail())){
                 showMessage(Message.MessageType.ERROR, "Este correo electrónico ya existe");
             }else{
+                System.out.println("Llamando a insertUser en ServiceUser con usuario: " + user.getUsername());
                 service.insertUser(user);
-                sendMain();
+                sendMain(user);
+                
             }
-        }catch(Exception e){
-            showMessage(Message.MessageType.ERROR,"Error en el registro");
+        }catch(SQLException e){
+            showMessage(Message.MessageType.ERROR,"Error en el registro" + e.getMessage());
         }
     }
-    private void sendMain(){
-        
+    private void login(){
+        ModelLogin data = loginAndRegister.getDataLogin();
+        try {
+            ModelUser user = service.login(data);
+            if(user!=null){
+                this.dispose();
+                MainSystem.main(user);
+            }else{
+                showMessage(Message.MessageType.ERROR, "Email o contraseña incorrecta");
+            }
+                
+        }catch (SQLException e){
+            showMessage(Message.MessageType.ERROR,"Error en el incio de sesion" + e.getMessage());
+        }
+    }
+    private void sendMain(ModelUser user){
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                loading.setVisible(true);
+                ModelMessage ms = new ServiceMail().sendMain(user.getEmail(), user.getVerifyCode());
+                if(ms.isSuccess()){
+                    loading.setVisible(false);
+                    verifyCode.setVisible(true);
+                }else{
+                    loading.setVisible(false);
+                    showMessage(Message.MessageType.ERROR, ms.getMessage());
+                }
+            }
+        }).start();
     }
        
     /* --------------------------Register hecho por Ángel--------------------------------

@@ -1,6 +1,7 @@
 package com.raven.loginService;
 
 import com.raven.connection.DatabaseConnection;
+import com.raven.loginModel.ModelLogin;
 import com.raven.loginModel.ModelUser;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -11,27 +12,60 @@ import java.util.Random;
 
 
 public class ServiceUser {
-    private final Connection con;
+    private final DatabaseConnection con;
+    
+    
     
     public ServiceUser(){
-        con = DatabaseConnection.getInstance().getConnection();
+        con = new DatabaseConnection();
+    }
+    public ModelUser login(ModelLogin login)throws SQLException{
+        ModelUser data=null;
+        PreparedStatement p = con.getPreparedStatement("SELECT UserID, UserName, Email FROM `user` WHERE BINARY(Email) = ? and BINARY(Password) = ? and Status ='Verify' limit 1");
+        p.setString(1, login.getEmail());
+        p.setString(2, login.getPassword());
+        ResultSet r=p.executeQuery();
+        if(r.first()){
+            int userID = r.getInt(1);
+            String userName = r.getString(2);
+            String email=r.getString(3);
+            data = new ModelUser(userID, userName, email, "");
+        }
+        r.close();
+        p.close();
+        return data;
     }
     
     public void insertUser(ModelUser user) throws SQLException {
-        PreparedStatement p = con.prepareStatement("insert into 'user' (UserName, Email, Password, VerifyCode) values (?,?,?,?)", PreparedStatement.RETURN_GENERATED_KEYS);
         String code = generateVerifyCode();
-        p.setString(1, user.getUserName());
-        p.setString(2, user.getEmail());
-        p.setString(3, user.getPassword());
-        p.setString(4, code);
-        p.execute();
-        ResultSet r = p.getGeneratedKeys();
-        r.first();
-        int userID=r.getInt(1);
-        r.close();
-        p.close();
-        user.setUserID(userID);
-        user.setVerifyCode(code);
+        String query = "INSERT INTO `user` (Username, Email, Password, VerifyCode) VALUES (?, ?, ?, ?);";
+        System.out.println("Conexión en ServiceUser: " + con);
+        try (PreparedStatement p = con.getPreparedStatementGeneratedKeys(query)) {
+            p.setString(1, user.getUsername());
+            p.setString(2, user.getEmail());
+            p.setString(3, user.getPassword());
+            p.setString(4, code);
+            System.out.println("Insertando usuario: " + user.getUsername());
+            System.out.println("Conexión en ServiceUser: " + con);
+            // Ejecutar la inserción
+            p.executeUpdate();
+
+            try (ResultSet r = p.getGeneratedKeys()) {
+                if (r.next()) {
+                    int userID = r.getInt(1);
+                    user.setUserID(userID);
+                } else {
+                    throw new SQLException("No generated keys found.");
+                }
+            }
+
+            // Asignar el código de verificación generado
+            user.setVerifyCode(code);
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+            throw e; // Re-lanzar la excepción para que pueda ser manejada fuera de este método
+        }
     }
     
     private String generateVerifyCode()throws SQLException{
@@ -45,7 +79,7 @@ public class ServiceUser {
     }
     private boolean checkDuplicateCode(String code)throws SQLException{
         boolean duplicate = false;
-        PreparedStatement p = con.prepareStatement("select UserID from 'user' where VerifyCode = ? limit 1");
+        PreparedStatement p = con.getPreparedStatement("select UserID from `user` where VerifyCode = ? limit 1");
         p.setString(1,code);
         ResultSet r = p.executeQuery();
         if(r.first()){
@@ -57,7 +91,7 @@ public class ServiceUser {
     }
     public boolean checkDuplicateUser(String user) throws SQLException{
         boolean duplicate = false;
-        PreparedStatement p=con.prepareStatement("select UserID from 'user' where UserName? and 'Status'='Verified' limit 1"); 
+        PreparedStatement p=con.getPreparedStatement("select UserID from `user` where UserName = ? and `Status` = 'Verify' limit 1"); 
         p.setString(1,user);
         ResultSet r=p.executeQuery();
         if(r.first()){
@@ -67,27 +101,29 @@ public class ServiceUser {
         p.close();
         return duplicate;
     }
-     public boolean checkDuolicateEmail(String user) throws SQLException{
+     public boolean checkDuplicateEmail(String user) throws SQLException{
         boolean duplicate = false;
-        PreparedStatement p=con.prepareStatement("select UserID from `user` where Email? and `Statu`='Verified' limit 1"); 
-        p.setString(1,user);
-        ResultSet r=p.executeQuery();
-        if(r.first()){
-            duplicate=true;
+        String query = "select UserID from `user` where Email = ? and `Status` = 'Verify' limit 1";
+
+        try (PreparedStatement p = con.getPreparedStatement(query);) {
+            p.setString(1, user);
+            try (ResultSet r = p.executeQuery()) {
+                duplicate = r.next(); // Esto es más simple que r.first()
+            }
         }
-        r.close();
-        p.close();
         return duplicate;
     }
      public void doneVerify(int userId) throws SQLException{
-         PreparedStatement p=con.prepareStatement("update `user` set VerifyCode='',`Status`='Verify' where UserID=? limit 1");
+         PreparedStatement p=con.getPreparedStatement("update `user` set VerifyCode= '',`Status`='Verify' where UserID=? limit 1");
          p.setInt(1, userId);
+         p.execute();
+         p.executeUpdate();
          p.close();
          
      }
      public boolean verifyCodeWithUser(int userID, String code) throws SQLException{
          boolean verify = false;
-         PreparedStatement p=con.prepareStatement("select UserID from `user` where UserID=? and VerifyCode=? limit 1");
+         PreparedStatement p=con.getPreparedStatement("select UserID from `user` where UserID = ? and VerifyCode=? limit 1");
          p.setInt(1, userID);
          p.setString(2,code);
          ResultSet r=p.executeQuery();

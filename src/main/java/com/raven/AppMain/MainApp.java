@@ -17,7 +17,8 @@ public class MainApp extends javax.swing.JPanel {
         PanelBuscarDatos pBusarDatos = new PanelBuscarDatos();
         bg2.add(pInicio);
         bg2.add(pBusarDatos);
-        pInicio.setVisible(true);
+        
+       // pInicio.setVisible(true);
         pBusarDatos.setVisible(false);
     }
     
@@ -27,6 +28,9 @@ public class MainApp extends javax.swing.JPanel {
     private void initComponents() {
 
         bg2 = new javax.swing.JLayeredPane();
+
+        bg2.setForeground(new java.awt.Color(255, 255, 255));
+        bg2.setOpaque(true);
 
         javax.swing.GroupLayout bg2Layout = new javax.swing.GroupLayout(bg2);
         bg2.setLayout(bg2Layout);

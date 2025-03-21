@@ -6,6 +6,7 @@ package com.raven.component;
 
 import com.raven.loginSwing.ButtonOutLine;
 import java.awt.Color;
+import java.awt.Cursor;
 import java.awt.Font;
 import java.awt.GradientPaint;
 import java.awt.Graphics;
@@ -53,6 +54,7 @@ public class PanelCover extends javax.swing.JPanel {
         button.setBackground(new Color(255,255,255));
         button.setForeground(new Color(32, 255, 184));
         button.setText("Cambiar");
+        button.setCursor(new Cursor(Cursor.HAND_CURSOR));
         button.addActionListener(new ActionListener(){
             @Override
             public void actionPerformed(ActionEvent ae){

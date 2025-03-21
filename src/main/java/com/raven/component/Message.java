@@ -71,6 +71,7 @@ public class Message extends javax.swing.JPanel {
     @Override
     protected void paintComponent(Graphics grphcs) {
         Graphics2D g2 = (Graphics2D)grphcs;
+        setAlignmentX(CENTER_ALIGNMENT);
         if(messageType == MessageType.SUCCESS){
             lbMessage.setOpaque(true);
             lbMessage.setBorder(BorderFactory.createLineBorder(Color.WHITE, 2));

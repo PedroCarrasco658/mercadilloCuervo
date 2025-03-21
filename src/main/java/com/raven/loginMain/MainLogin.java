@@ -3,10 +3,13 @@ package com.raven.loginMain;
 
 import com.raven.component.Message;
 import com.raven.component.PanelCover;
+import com.raven.component.PanelGetEmail;
 import com.raven.component.PanelInicio;
 import com.raven.component.PanelLoading;
 import com.raven.component.PanelLoginAndRegister;
+import com.raven.component.PanelResetPassword;
 import com.raven.component.PanelVerifyCode;
+import com.raven.component.PanelVerifyCodePs;
 import com.raven.loginModel.ModelUser;
 import com.raven.loginService.ServiceUser;
 import java.awt.Frame;
@@ -29,12 +32,16 @@ import com.raven.loginModel.ModelLogin;
 import com.raven.loginModel.ModelMessage;
 import com.raven.loginService.ServiceMail;
 import java.sql.DriverManager;
+import java.util.Random;
 public class MainLogin extends javax.swing.JFrame {
 
     private MigLayout layout;
     private PanelCover cover;
     private PanelLoading loading;
     private PanelVerifyCode verifyCode;
+    private PanelVerifyCodePs verifyCodePs;
+    private PanelGetEmail pGetEmail;
+    private PanelResetPassword resetPassword;
     private boolean isLogin;
     private final double addSize = 30;
     private final double coverSize = 40;
@@ -45,6 +52,8 @@ public class MainLogin extends javax.swing.JFrame {
     private PanelLoginAndRegister loginAndRegister;
     private ServiceUser service;
     private PanelInicio panelInicio;
+    private String veifyCoderstPassword;
+    private String EmailRstPassword;
     
     
     public MainLogin() {
@@ -75,11 +84,13 @@ public class MainLogin extends javax.swing.JFrame {
         cover = new PanelCover();
         loading = new PanelLoading();
         verifyCode = new PanelVerifyCode();
+        verifyCodePs = new PanelVerifyCodePs();
+        pGetEmail = new PanelGetEmail();
+        resetPassword = new PanelResetPassword();
         ActionListener eventRegister = new ActionListener(){
             @Override
             public void actionPerformed(ActionEvent ae){
                 register();
-                //ejecutarInsercion();
             } 
         };
         ActionListener eventLogin = new ActionListener() {
@@ -88,7 +99,15 @@ public class MainLogin extends javax.swing.JFrame {
                 login();
             }
         };
-        loginAndRegister = new PanelLoginAndRegister(eventRegister, eventLogin);
+        ActionListener eventgetEmail = new ActionListener(){
+            @Override
+            public void actionPerformed(ActionEvent ae){
+                
+                getEmail();
+            } 
+        };
+        
+        loginAndRegister = new PanelLoginAndRegister(eventRegister, eventLogin, eventgetEmail);
         TimingTarget target = new TimingTargetAdapter(){
             @Override
             public void timingEvent(float fraction){
@@ -140,8 +159,12 @@ public class MainLogin extends javax.swing.JFrame {
         bg.setLayout(layout);
         bg.setLayer(loading, JLayeredPane.POPUP_LAYER);
         bg.setLayer(verifyCode, JLayeredPane.POPUP_LAYER);
+        bg.setLayer(verifyCodePs, JLayeredPane.POPUP_LAYER);
         bg.add(loading,"pos 0 0 100% 100%");
         bg.add(verifyCode,"pos 0 0 100% 100%");
+        bg.add(verifyCodePs,"pos 0 0 100% 100%");
+        bg.add(resetPassword,"pos 0 0 100% 100%");
+        bg.add(pGetEmail,"pos 0 0 100% 100%");
         bg.add(cover, "width " + coverSize + "%, pos 0al 0 n 100%");
         bg.add(loginAndRegister, "width " + loginSize + "%, pos 1al 0 n 100%");
         cover.addEvent(new ActionListener(){
@@ -169,9 +192,76 @@ public class MainLogin extends javax.swing.JFrame {
                 }
             }
         });
+        
+    }
+    private void getEmail(){
+        pGetEmail.setVisible(true);
+        pGetEmail.addEventButtonUsar(new ActionListener(){
+            @Override
+            public void actionPerformed(ActionEvent ae) {
+                try{
+                    String email = pGetEmail.getInputCode().trim();
+                    System.out.println(service.existsEmail(email));
+                    if(service.existsEmail(email)){
+                        ModelUser user = service.getUserByEmail(email);
+                        EmailRstPassword = user.getEmail();
+                        System.out.println(user.getUsername() + user.getVerifyCode());
+                        user.setVerifyCode(service.generateVerifyCode());
+                        veifyCoderstPassword = user.getVerifyCode().trim();
+                        System.out.println(user.getEmail() + user.getVerifyCode());
+                        sendMainPs(user);
+                        pGetEmail.setVisible(false);
+                    }else{
+                        showMessage(Message.MessageType.ERROR, "Email incorrecto");
+                    }
+                }catch(SQLException e){
+                    showMessage(Message.MessageType.ERROR,"Error en el correo" + e.getMessage());
+                }
+                
+            }
+            
+        });
+        verifyCodePs.addEventButtonOk(new ActionListener(){
+            @Override
+            public void actionPerformed(ActionEvent ae){
+                try {
+                    if(verifyCodePs.getInputCode().equals(veifyCoderstPassword)){
+                        showMessage(Message.MessageType.SUCCESS,"Código de verificación correcto");
+                        verifyCodePs.setVisible(false);
+                        resetPassword.setVisible(true);
+                        rstPassword();
+                    }else{
+                        showMessage(Message.MessageType.ERROR,"Código de verificación Incorrecto");
+                    }
+                } catch (Exception e) {
+                    System.out.println(e.getMessage());
+                    showMessage(Message.MessageType.ERROR, "Error");
+                }
+            }
+        });
+    }
+    private void rstPassword(){
+        resetPassword.addEventButtonConfirm(new ActionListener(){
+            @Override
+            public void actionPerformed(ActionEvent ae) {
+                try{
+                    if(resetPassword.getInputNewPassword().equals(resetPassword.getInputConfirmPassword())){
+                        service.actualizarContraseña(resetPassword.getInputNewPassword(), EmailRstPassword);
+                        resetPassword.setVisible(false);
+                        showMessage(Message.MessageType.SUCCESS,"Contraseña actualizada");
+                    }else{
+                        showMessage(Message.MessageType.ERROR, "Las contraseñas no coinciden");
+                    }
+                    
+                }catch(SQLException e){
+                    showMessage(Message.MessageType.ERROR,"Error al actualizar la contraseña" + e.getMessage());
+                }
+                
+            }
+        });
     }
     
-     private void register(){
+    private void register(){
         ModelUser user = loginAndRegister.getUser();
         try{
             if(service.checkDuplicateUser(user.getUsername())){
@@ -179,7 +269,6 @@ public class MainLogin extends javax.swing.JFrame {
             }else if(service.checkDuplicateEmail(user.getEmail())){
                 showMessage(Message.MessageType.ERROR, "Este correo electrónico ya existe");
             }else{
-                System.out.println("Llamando a insertUser en ServiceUser con usuario: " + user.getUsername());
                 service.insertUser(user);
                 sendMain(user);
                 
@@ -194,7 +283,8 @@ public class MainLogin extends javax.swing.JFrame {
             ModelUser user = service.login(data);
             if(user!=null){
                 this.dispose();
-                MainSystem.main(user);
+                MainInicio.main(user);
+                //MainSystem.main(user);
             }else{
                 showMessage(Message.MessageType.ERROR, "Email o contraseña incorrecta");
             }
@@ -212,6 +302,22 @@ public class MainLogin extends javax.swing.JFrame {
                 if(ms.isSuccess()){
                     loading.setVisible(false);
                     verifyCode.setVisible(true);
+                }else{
+                    loading.setVisible(false);
+                    showMessage(Message.MessageType.ERROR, ms.getMessage());
+                }
+            }
+        }).start();
+    }
+    private void sendMainPs(ModelUser user){
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                loading.setVisible(true);
+                ModelMessage ms = new ServiceMail().sendMainPs(user.getEmail(), user.getVerifyCode());
+                if(ms.isSuccess()){
+                    loading.setVisible(false);
+                    verifyCodePs.setVisible(true);
                 }else{
                     loading.setVisible(false);
                     showMessage(Message.MessageType.ERROR, ms.getMessage());
@@ -293,64 +399,72 @@ public class MainLogin extends javax.swing.JFrame {
     }).start();
 }*/
     
-    private void showMessage(Message.MessageType messageType, String message){
-        Message ms = new Message();
-        ms.showMessage(messageType, message);
-        TimingTarget target = new TimingTargetAdapter(){
-            @Override
-            public void begin() {
-                if(!ms.isShow()){
-                    bg.add(ms,"pos 1.5al -30", 0);
-                    ms.setVisible(true);
-                    ms.setLocation(150, 10);
-                    bg.repaint();
-                }
-            }
+   private void showMessage(Message.MessageType messageType, String message){
+    Message ms1 = new Message();
+    Message ms2 = new Message();
 
-            @Override
-            public void timingEvent(float fraction) {
-                float f;
-                if(ms.isShow()){
-                    f=40 * (1f - fraction);
-                }else{
-                    f=40*fraction;
-                }
-                layout.setComponentConstraints(ms, "pos 1.5 "+(int)(f - 30));
+    ms1.showMessage(messageType, message);
+    ms2.showMessage(messageType, message);
+
+    TimingTarget target = new TimingTargetAdapter() {
+        @Override
+        public void begin() {
+            if (!ms1.isShow() && !ms2.isShow()) {
+                // Agregar ambos mensajes en la misma posición
+                bg.add(ms1, "pos 1.5al -30", 0);
+                bg.add(ms2, "pos 1.5al -30", 1);
+                ms1.setVisible(true);
+                ms2.setVisible(true);
+                ms1.setLocation(150, 10);
+                ms2.setLocation(150, 10);
+                bg.repaint();
+            }
+        }
+
+        @Override
+        public void timingEvent(float fraction) {
+            float f;
+            if (ms1.isShow() && ms2.isShow()) {
+                f = 40 * (1f - fraction);
+            } else {
+                f = 40 * fraction;
+            }
+            // Ajustar ambos mensajes en la misma posición
+            layout.setComponentConstraints(ms1, "pos 1.5 " + (int) (f - 30));
+            layout.setComponentConstraints(ms2, "pos 1.5 " + (int) (f - 30));
+            bg.repaint();
+            bg.revalidate();
+        }
+
+        @Override
+        public void end() {
+            if (ms1.isShow() && ms2.isShow()) {
+                bg.remove(ms1);
+                bg.remove(ms2);
                 bg.repaint();
                 bg.revalidate();
+            } else {
+                ms1.setShow(true);
+                ms2.setShow(true);
             }
+        }
+    };
 
-            @Override
-            public void end() {
-                if(ms.isShow()){
-                    bg.remove(ms);
-                    bg.repaint();
-                    bg.revalidate();
-                } else {
-                    ms.setShow(true);
-                }
-            }
-            
-        };
-        
-        Animator animator = new Animator(300, target);
-        animator.setResolution(0);
-        animator.setAcceleration(0.5f);
-        animator.setDeceleration(0.5f);
-        animator.start();
-        new Thread(new Runnable(){
-            @Override
-            public void run() {
-                try{
-                    Thread.sleep(2000);
-                    animator.start();
-                }catch (InterruptedException e){
-                    System.err.println(e);
-                } 
-            }
-           
-        }).start();
-    }
+    Animator animator = new Animator(300, target);
+    animator.setResolution(0);
+    animator.setAcceleration(0.5f);
+    animator.setDeceleration(0.5f);
+    animator.start();
+
+    new Thread(() -> {
+        try {
+            Thread.sleep(2000);
+            animator.start();
+        } catch (InterruptedException e) {
+            System.err.println(e);
+        }
+    }).start();
+}
     @SuppressWarnings("unchecked")
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {

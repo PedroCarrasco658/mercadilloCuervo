@@ -6,6 +6,7 @@ package com.raven.component;
 
 import com.raven.loginModel.ModelLogin;
 import com.raven.loginModel.ModelUser;
+import com.raven.loginService.ServiceUser;
 import com.raven.loginSwing.Button;
 import com.raven.loginSwing.MyPasswordField;
 import com.raven.loginSwing.MyTextField;
@@ -22,6 +23,7 @@ import java.awt.event.ActionListener;
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JLabel;
+import javax.swing.JOptionPane;
 import net.miginfocom.swing.MigLayout;
 
 /**
@@ -42,10 +44,10 @@ public class PanelLoginAndRegister extends javax.swing.JLayeredPane {
     }
     
     
-    public PanelLoginAndRegister(ActionListener eventRegister,ActionListener eventLogin) {
+    public PanelLoginAndRegister(ActionListener eventRegister,ActionListener eventLogin, ActionListener eventgetEmail) {
         initComponents();
         initRegister(eventRegister);
-        initLogin(eventLogin);
+        initLogin(eventLogin, eventgetEmail);
         login.setVisible(false);
         register.setVisible(true);
     }
@@ -83,6 +85,7 @@ public class PanelLoginAndRegister extends javax.swing.JLayeredPane {
         Button cmd = new Button();
         cmd.setBackground(new Color(32, 255, 184));
         cmd.setForeground(250,250,250);
+        cmd.setCursor(new Cursor(Cursor.HAND_CURSOR));
         cmd.addActionListener(eventRegister);
         cmd.setText("Registrarse");
         register.add(cmd, "w 40%, h 40");
@@ -97,7 +100,7 @@ public class PanelLoginAndRegister extends javax.swing.JLayeredPane {
         });
         
     }
-    private void initLogin(ActionListener eventLogin){
+    private void initLogin(ActionListener eventLogin, ActionListener eventgetEmail){
         login.setLayout(new MigLayout("wrap", "push[center]push", "push[]50[]10[]35[]14[]push"));
         JLabel label = new JLabel("Iniciar Sesión");
         label.setFont(new Font("sansserif", 1, 30));
@@ -109,7 +112,6 @@ public class PanelLoginAndRegister extends javax.swing.JLayeredPane {
         ImageIcon originalIcon2 = new ImageIcon(getClass().getResource("/com/raven/icon/mail.png"));
         Image scaledImage2 = originalIcon2.getImage().getScaledInstance(18, 18, Image.SCALE_SMOOTH); 
         txtEmail.setPrefixIcon(new ImageIcon(scaledImage2));
-      //  txtEmail.setPrefixIcon(new ImageIcon(getClass().getResource("/com/raven/icon/mail.png")));
         txtEmail.setHint("Email");
         login.add("width 60%", txtEmail);
         
@@ -130,10 +132,12 @@ public class PanelLoginAndRegister extends javax.swing.JLayeredPane {
         cmdForget.setBorderPainted(false);
         cmdForget.setFocusPainted(false);
         cmdForget.setOpaque(false);
+        cmdForget.addActionListener(eventgetEmail);
         
         Button cmd = new Button();
         cmd.setBackground(new Color(32, 255, 184));
         cmd.setForeground(250,250,250);
+        cmd.setCursor(new Cursor(Cursor.HAND_CURSOR));
         cmd.addActionListener(eventLogin);
         cmd.setText("Inicia Sesión");
         login.add(cmd, "w 40%, h 40");

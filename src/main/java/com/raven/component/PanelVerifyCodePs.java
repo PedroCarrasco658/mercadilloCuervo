@@ -9,10 +9,10 @@ import java.awt.event.ActionListener;
 import java.awt.event.MouseAdapter;
 
 
-public class PanelVerifyCode extends javax.swing.JPanel {
+public class PanelVerifyCodePs extends javax.swing.JPanel {
 
    
-    public PanelVerifyCode() {
+    public PanelVerifyCodePs() {
         initComponents();
         setOpaque(false);
         setFocusCycleRoot(true);
@@ -30,8 +30,8 @@ public class PanelVerifyCode extends javax.swing.JPanel {
             txtCode.setText("");
         }
     }
-    
-  
+
+   
     @SuppressWarnings("unchecked")
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
@@ -109,27 +109,27 @@ public class PanelVerifyCode extends javax.swing.JPanel {
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                .addContainerGap(50, Short.MAX_VALUE)
+                .addContainerGap(155, Short.MAX_VALUE)
                 .addComponent(panelRound1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(48, Short.MAX_VALUE))
+                .addContainerGap(153, Short.MAX_VALUE))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
-                .addContainerGap(50, Short.MAX_VALUE)
+                .addContainerGap(58, Short.MAX_VALUE)
                 .addComponent(panelRound1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(50, Short.MAX_VALUE))
+                .addContainerGap(58, Short.MAX_VALUE))
         );
     }// </editor-fold>//GEN-END:initComponents
 
     private void txtCodeActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txtCodeActionPerformed
-        
+
     }//GEN-LAST:event_txtCodeActionPerformed
 
     private void cmdCancelActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cmdCancelActionPerformed
         setVisible(false);
     }//GEN-LAST:event_cmdCancelActionPerformed
-      @Override
+    @Override
     protected void paintComponent(Graphics grphcs) {
         Graphics2D g2 = (Graphics2D)grphcs;
         g2.setColor(new Color(50, 50, 50));
@@ -139,14 +139,12 @@ public class PanelVerifyCode extends javax.swing.JPanel {
         super.paintComponent(grphcs); 
     }
     
-        public String getInputCode(){
-            return txtCode.getText().trim();
-        }
-        public void addEventButtonOk(ActionListener event){
-            cmdOk.addActionListener(event);
-        }
-        
-        
+    public String getInputCode(){
+        return txtCode.getText().trim();
+    }
+    public void addEventButtonOk(ActionListener event){
+        cmdOk.addActionListener(event);
+    }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private com.raven.loginSwing.ButtonOutLine cmdCancel;

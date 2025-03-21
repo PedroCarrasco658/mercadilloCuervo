@@ -26,7 +26,7 @@ public class DatabaseConnection {
     private Connection getConnection(){
         String url = "jdbc:mysql://localhost:3306/loginmercadillo";
         String userName = "root";
-        String password = "";
+        String password = "1234";
         if(connection == null){
             try{
                 connection = java.sql.DriverManager.getConnection(url, userName, password);

@@ -9,6 +9,7 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.text.DecimalFormat;
 import java.util.Random;
+import javax.swing.JOptionPane;
 
 
 public class ServiceUser {
@@ -68,7 +69,7 @@ public class ServiceUser {
         }
     }
     
-    private String generateVerifyCode()throws SQLException{
+    public String generateVerifyCode()throws SQLException{
         DecimalFormat df = new DecimalFormat("000000");
         Random ran = new Random();
         String code = df.format(ran.nextInt(1000000));
@@ -133,6 +134,42 @@ public class ServiceUser {
          r.close();
          p.close();
          return verify;
-         
      }
+    public void actualizarContraseña(String nuevaContraseña, String Email) throws SQLException {
+        String sql = "UPDATE `user` SET Password = ? WHERE Email = ?"; // Cambia esto según tu estructura
+        try(PreparedStatement p = con.getPreparedStatement(sql);){
+            p.setString(1, nuevaContraseña);
+            p.setString(2, Email); // Debes asegurarte de tener el email guardado en `dataLogin`
+            p.executeUpdate();
+        }
+    }
+    public boolean existsEmail(String email) throws SQLException {
+        String query = "SELECT 1 FROM `user` WHERE Email = ? LIMIT 1";
+
+        try (PreparedStatement p = con.getPreparedStatement(query)) {
+            p.setString(1, email);
+            try (ResultSet r = p.executeQuery()) {
+                return r.next(); // Devuelve true si el correo existe
+            }
+        }
+    }
+    public ModelUser getUserByEmail(String email) throws SQLException {
+        ModelUser user = null;
+        String query = "SELECT UserID, UserName, Email, Password, VerifyCode FROM `user` WHERE Email = ? LIMIT 1";
+
+        try (PreparedStatement p = con.getPreparedStatement(query)) {
+            p.setString(1, email);
+            try (ResultSet r = p.executeQuery()) {
+                if (r.next()) {
+                    int userID = r.getInt("UserID");
+                    String userName = r.getString("UserName");
+                    String userEmail = r.getString("Email");
+                    String Password = r.getString("VerifyCode");
+                    String VerifyCode = r.getString("VerifyCode");
+                    user = new ModelUser(userID, userName, userEmail, Password, VerifyCode); 
+                }
+            }
+        }
+        return user;
+    }
 }

@@ -4,6 +4,7 @@
  */
 package com.raven.component;
 
+import com.raven.loginMain.MainInicio;
 import com.raven.loginModel.ModelLogin;
 import com.raven.loginModel.ModelUser;
 import com.raven.loginService.ServiceUser;
@@ -201,7 +202,7 @@ public class PanelLoginAndRegister extends javax.swing.JLayeredPane {
     }// </editor-fold>//GEN-END:initComponents
 
     
-   
+  
     
 
     // Variables declaration - do not modify//GEN-BEGIN:variables

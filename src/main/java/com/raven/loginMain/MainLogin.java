@@ -102,7 +102,6 @@ public class MainLogin extends javax.swing.JFrame {
         ActionListener eventgetEmail = new ActionListener(){
             @Override
             public void actionPerformed(ActionEvent ae){
-                
                 getEmail();
             } 
         };
@@ -283,7 +282,9 @@ public class MainLogin extends javax.swing.JFrame {
             ModelUser user = service.login(data);
             if(user!=null){
                 this.dispose();
-                MainInicio.main(user);
+                MainInicio mainInicio = new MainInicio();
+                mainInicio.setVisible(true);
+                //MainInicio.main(user);
                 //MainSystem.main(user);
             }else{
                 showMessage(Message.MessageType.ERROR, "Email o contraseña incorrecta");
@@ -325,79 +326,6 @@ public class MainLogin extends javax.swing.JFrame {
             }
         }).start();
     }
-       
-    /* --------------------------Register hecho por Ángel--------------------------------
-    private void register() {
-    ModelUser user = loginAndRegister.getUser();
-    if (user == null) {
-        showMessage(Message.MessageType.ERROR, "No se obtuvo información del usuario.");
-        return;
-    }
-
-    // Obtener y limpiar los campos
-    String nombre = user.getUserName() != null ? user.getUserName().trim() : "";
-    String email = user.getEmail() != null ? user.getEmail().trim() : "";
-    String password = user.getPassword() != null ? user.getPassword().trim() : "";
-
-    // Validaciones
-    if (nombre.isEmpty()) {
-        showMessage(Message.MessageType.ERROR, "El nombre es obligatorio.");
-        return;
-    }
-
-    if (email.isEmpty()) {
-        showMessage(Message.MessageType.ERROR, "El email es obligatorio.");
-        return;
-    }
-
-    // Validar formato del email solo si no está vacío
-    if (!email.isEmpty() && !email.matches("^[A-Za-z0-9+_.-]+@(.+)$")) {
-        showMessage(Message.MessageType.ERROR, "El email no tiene un formato válido.");
-        return;
-    }
-
-    if (password.isEmpty()) {
-        showMessage(Message.MessageType.ERROR, "La contraseña es obligatoria.");
-        return;
-    }
-
-    if (password.length() < 6) {
-        showMessage(Message.MessageType.ERROR, "La contraseña debe tener al menos 6 caracteres.");
-        return;
-    }
-
-    // Mostrar el panel de carga
-    loading.setVisible(true);
-
-    // Operación en un hilo separado para no bloquear la UI
-    new Thread(() -> {
-        String sql = "INSERT INTO Cliente (nombre, email, contrasena, dni) VALUES (?, ?, ?, ?)"; // Corrección de typo
-        try (Connection conn = ConexionDB.getConnection();
-             PreparedStatement pstmt = conn.prepareStatement(sql)) {
-            // Mapear campos a Cliente, asegurando todos los parámetros
-            pstmt.setString(1, nombre);
-            pstmt.setString(2, email);
-            pstmt.setString(3, password); // Siempre se establece, validado previamente
-            pstmt.setNull(4, java.sql.Types.VARCHAR); // dni opcional, siempre NULL
-
-            int rowsAffected = pstmt.executeUpdate();
-            java.awt.EventQueue.invokeLater(() -> {
-                loading.setVisible(false);
-                if (rowsAffected > 0) {
-                    showMessage(Message.MessageType.SUCCESS, "Cliente registrado exitosamente!");
-                } else {
-                    showMessage(Message.MessageType.ERROR, "Error al registrar el cliente (ninguna fila afectada).");
-                }
-            });
-        } catch (SQLException e) {
-            java.awt.EventQueue.invokeLater(() -> {
-                loading.setVisible(false);
-                showMessage(Message.MessageType.ERROR, "Error de base de datos: " + e.getMessage());
-            });
-            e.printStackTrace();
-        }
-    }).start();
-}*/
     
    private void showMessage(Message.MessageType messageType, String message){
     Message ms1 = new Message();

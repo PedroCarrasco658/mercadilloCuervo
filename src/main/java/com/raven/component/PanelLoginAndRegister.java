@@ -7,7 +7,7 @@ package com.raven.component;
 import com.raven.loginMain.MainInicio;
 import com.raven.loginModel.ModelLogin;
 import com.raven.loginModel.ModelUser;
-import com.raven.loginService.ServiceUser;
+import com.raven.Service.ServiceUser;
 import com.raven.loginSwing.Button;
 import com.raven.loginSwing.MyPasswordField;
 import com.raven.loginSwing.MyTextField;

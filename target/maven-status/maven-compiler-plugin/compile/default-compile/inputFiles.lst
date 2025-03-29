@@ -11,6 +11,7 @@ D:\1_DAM\practicas2\mercadilloCuervo\src\main\java\com\raven\component\PanelRese
 D:\1_DAM\practicas2\mercadilloCuervo\src\main\java\com\raven\component\PanelVerifyCode.java
 D:\1_DAM\practicas2\mercadilloCuervo\src\main\java\com\raven\component\PanelVerifyCodePs.java
 D:\1_DAM\practicas2\mercadilloCuervo\src\main\java\com\raven\connection\DatabaseConnection.java
+D:\1_DAM\practicas2\mercadilloCuervo\src\main\java\com\raven\connection\DatabaseConnectionMercadillo.java
 D:\1_DAM\practicas2\mercadilloCuervo\src\main\java\com\raven\database\ConexionDB.java
 D:\1_DAM\practicas2\mercadilloCuervo\src\main\java\com\raven\loginMain\MainInicio.java
 D:\1_DAM\practicas2\mercadilloCuervo\src\main\java\com\raven\loginMain\MainLogin.java
@@ -19,13 +20,14 @@ D:\1_DAM\practicas2\mercadilloCuervo\src\main\java\com\raven\loginModel\Insertar
 D:\1_DAM\practicas2\mercadilloCuervo\src\main\java\com\raven\loginModel\ModelLogin.java
 D:\1_DAM\practicas2\mercadilloCuervo\src\main\java\com\raven\loginModel\ModelMessage.java
 D:\1_DAM\practicas2\mercadilloCuervo\src\main\java\com\raven\loginModel\ModelUser.java
-D:\1_DAM\practicas2\mercadilloCuervo\src\main\java\com\raven\loginService\ServiceMail.java
-D:\1_DAM\practicas2\mercadilloCuervo\src\main\java\com\raven\loginService\ServiceUser.java
 D:\1_DAM\practicas2\mercadilloCuervo\src\main\java\com\raven\loginSwing\Button.java
 D:\1_DAM\practicas2\mercadilloCuervo\src\main\java\com\raven\loginSwing\ButtonOutLine.java
 D:\1_DAM\practicas2\mercadilloCuervo\src\main\java\com\raven\loginSwing\MyPasswordField.java
 D:\1_DAM\practicas2\mercadilloCuervo\src\main\java\com\raven\loginSwing\MyTextField.java
 D:\1_DAM\practicas2\mercadilloCuervo\src\main\java\com\raven\loginSwing\PanelRound.java
+D:\1_DAM\practicas2\mercadilloCuervo\src\main\java\com\raven\Service\ServiceMail.java
+D:\1_DAM\practicas2\mercadilloCuervo\src\main\java\com\raven\Service\ServiceMerca.java
+D:\1_DAM\practicas2\mercadilloCuervo\src\main\java\com\raven\Service\ServiceUser.java
 D:\1_DAM\practicas2\mercadilloCuervo\src\main\java\componentMerca\PanelClientes.java
 D:\1_DAM\practicas2\mercadilloCuervo\src\main\java\componentMerca\PanelMercadillo.java
 D:\1_DAM\practicas2\mercadilloCuervo\src\main\java\componentMerca\PanelPuestos.java

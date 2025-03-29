@@ -55,7 +55,7 @@ public class MainInicio extends javax.swing.JFrame {
         };
         
         panelMercadillo = new PanelMercadillo(eventVerDatos, eventClientes, eventPuestos, eventSalir);
-        VerDatos = new PanelVerDatos();
+        VerDatos = new PanelVerDatos(eventAnterior);
         Clientes = new PanelClientes(eventAnterior);
         Puestos = new PanelPuestos(eventAnterior);
         

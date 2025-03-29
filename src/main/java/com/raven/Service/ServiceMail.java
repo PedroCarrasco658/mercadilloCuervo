@@ -1,5 +1,5 @@
 
-package com.raven.loginService;
+package com.raven.Service;
 
 import com.raven.loginModel.ModelMessage;
 import jakarta.mail.Message;

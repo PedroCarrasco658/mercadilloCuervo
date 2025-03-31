@@ -31,6 +31,7 @@ import com.raven.loginModel.InsertarFila;
 import com.raven.loginModel.ModelLogin;
 import com.raven.loginModel.ModelMessage;
 import com.raven.Service.ServiceMail;
+import componentMerca.PanelMercadillo;
 import java.sql.DriverManager;
 import java.util.Random;
 public class MainLogin extends javax.swing.JFrame {
@@ -42,6 +43,7 @@ public class MainLogin extends javax.swing.JFrame {
     private PanelVerifyCodePs verifyCodePs;
     private PanelGetEmail pGetEmail;
     private PanelResetPassword resetPassword;
+    private PanelMercadillo panelMercadillo;
     private boolean isLogin;
     private final double addSize = 30;
     private final double coverSize = 40;
@@ -276,15 +278,21 @@ public class MainLogin extends javax.swing.JFrame {
             showMessage(Message.MessageType.ERROR,"Error en el registro" + e.getMessage());
         }
     }
+    public void Close(){
+        this.dispose();
+    }
     private void login(){
         
         ModelLogin data = loginAndRegister.getDataLogin();
+        this.dispose();
+                MainInicio mainInicio = new MainInicio();
+                mainInicio.setVisible(true);
         try {
             ModelUser user = service.login(data);
             if(user!=null){
-                this.dispose();
+                /*this.dispose();
                 MainInicio mainInicio = new MainInicio();
-                mainInicio.setVisible(true);
+                mainInicio.setVisible(true);*/
                 //MainInicio.main(user);
                 //MainSystem.main(user);
             }else{
@@ -300,7 +308,7 @@ public class MainLogin extends javax.swing.JFrame {
             @Override
             public void run() {
                 loading.setVisible(true);
-                ModelMessage ms = new ServiceMail().sendMain(user.getEmail(), user.getVerifyCode());
+                ModelMessage ms = new ServiceMail().sendMail(user.getEmail(), user.getVerifyCode());
                 if(ms.isSuccess()){
                     loading.setVisible(false);
                     verifyCode.setVisible(true);

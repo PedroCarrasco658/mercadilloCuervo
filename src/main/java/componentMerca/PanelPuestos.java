@@ -6,13 +6,15 @@ import java.awt.event.ActionListener;
 public class PanelPuestos extends javax.swing.JPanel {
 
  
-    public PanelPuestos(ActionListener eventAnterior) {
+    public PanelPuestos(ActionListener eventAnterior, ActionListener eventVerPuestos, ActionListener eventIntrPuestos) {
         initComponents();
-        init(eventAnterior);
+        init(eventAnterior, eventVerPuestos, eventIntrPuestos);
     }
     
-    public void init(ActionListener eventAnterior){
+    public void init(ActionListener eventAnterior, ActionListener eventIntrPuestos , ActionListener eventVerPuestos){
         ButtonAnterior.addActionListener(eventAnterior);
+        ButtonIntrPuesto.addActionListener(eventIntrPuestos);
+        ButtonModPuesto.addActionListener(eventVerPuestos);
     }
 
     
